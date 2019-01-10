@@ -1,0 +1,238 @@
+---
+title: Socioeconomic Factors of Poor Physical and Mental Health
+author: Said Jiménez
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, fig.align = 'center')
+
+```
+
+## Setup
+
+### Load packages
+
+```{r load-packages}
+library(tidyverse)
+```
+
+### Load data
+
+```{r load-data}
+load("brfss2013.RData")
+```
+
+
+* * *
+
+## Part 1: Data
+
+BRFSS is an ongoing surveillance system designed to measure behavioral risk factors for the non-institutionalized adult population (18 years of age and older) residing in the US. The BRFSS was initiated in 1984, with 15 states collecting surveillance data on risk behaviors through monthly telephone interviews.
+
+The sampling of the survey is not explicit about the use of any kind of random sampling, so it is necessary to consider that the generabizability of this data are limited to the participants involved. 
+
+This data were obtained in the context of an observational study, which does not use random assignment to any condition, so this study is not intended to determine causality. It helps to determine associations between variables, but not causality. 
+
+
+
+* * *
+
+## Part 2: Research questions
+
+**Research quesion 1:** 
+I wanted to know if there is a relationship between monetary income and general health.
+
+This question involves just two variables:
+
+
+1. Monetary Income
+
+
+2. General health
+
+**Research quesion 2:**
+Due to the fact that there are people who could not see a Dr. because of cost, it might exist differences in the number of unhealthy (mental and physical) days between people who can pay and people who can not pay a Doctor. 
+
+This question involves four variables: 
+
+
+1. Number of people who coul not see a doctor because of cost
+
+
+2. Number of poor mental health
+
+
+3. Number of poor physical health
+
+
+4. Number of poor general health 
+
+**Research quesion 3:**
+It is supposed that depression is related with consume of alcohol, so I explored if there was a difference in people who ever had a deppresive disorder and people who had not in the average of alcoholic drinks per day. Also I explored if this difference was related with sex of participants.
+
+This question involves three variables:
+
+
+1. Drinks per day
+
+
+2. Have a depressive disorder
+
+
+3. Sex
+
+* * *
+
+## Part 3: Exploratory data analysis
+
+**Research quesion 1:** 
+
+I decided to explore two variables in order to answer my first question. I chose two categorical variables: "genhlth" and "income2", the first is about how people rate their general health and the other is how people rate their income. 
+
+```{r summary}
+# General Health
+summary(brfss2013$genhlth) 
+
+ # Income
+summary(brfss2013$income2)
+```
+
+With the aim of examine the relationship between this two variables I decided to make a cross table.
+```{r crosstab}
+
+# Crosstab 
+xtabs(~brfss2013$genhlth + brfss2013$income2) 
+
+```
+
+Unfortunately since there are lots of observations, the table was difficult to interpret, so I decided to make a plot of the frequencies. In the figure it is clear that the number of people who rate their General Health as "Very good" or "Excellent" increases as the income rises. It is not as clear, but also the number of people who rate his General Health as "Poor" diminishes as income rises.
+```{r health_income, echo=FALSE}
+brfss2013 %>% 
+  filter(!is.na(income2),
+         !is.na(genhlth)) %>% 
+  ggplot(aes(x = income2, fill = genhlth)) + 
+  geom_bar() + 
+  labs(x = NULL, 
+       y = "Frequencies", 
+       title = "General Health and Income", 
+       fill = "Health") +   
+  coord_flip() +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5))
+  
+```
+
+* * *
+
+**Research quesion 2:**
+
+
+People who could not see a Dr. because of cost have poorer mental, physical ang global health than people who do not have problems with cost?
+
+In order to examine the second question I calculated the means of days in which people reported poor mental or/and physical health, and I decided to group these means acording with the possibility or not of paying a doctor. It is important to note that I perform this analysis for three variables: Number of not good physical health, number of days of not good mental health and number of days of poor phsycal or mental health.
+
+First, I summarized the frequencies of people who could not see a Dr. because of cost.
+```{r medcost}
+# Could Not See Dr. Because Of Cost
+summary(brfss2013$medcost) 
+
+```
+Then, I created a new dataset by selecting and cleaning of NA the four variables that I used to answer the question: medcost, physhlth, menthlth and poorhlth. 
+
+Immediately I created three variables: "avg_poor_physical", "avg_poor_mental", "avg_poor_total", these are the means of days reported of poor health in each of the three domains.
+
+We can clearly see that people who could not see a doctor because of cost have greater means of bad days in comparison of people who do not have this problem.
+
+```{r health_cost}
+
+health_cost <- brfss2013 %>%
+  select(medical_cost = medcost,
+         physical_health = physhlth, 
+         mental_health = menthlth, 
+         poor_health = poorhlth) %>%
+  filter(!is.na(medical_cost),
+         !is.na(physical_health),
+         !is.na(mental_health),
+         !is.na(poor_health))
+
+health_cost %>%
+  group_by(medical_cost) %>%
+  summarise(avg_poor_physical = mean(physical_health), # Number Of Days Physical Health Not Good
+            avg_poor_mental = mean(mental_health), # Number Of Days Mental Health Not Good
+            avg_poor_total = mean(poor_health)) # Poor Physical Or Mental Health
+
+```
+
+In the next figure you can see that people, who say that they could not see a doctor because of cost, have a mean of almost 11 days of not good mental health. By the other side, people who do not have the problem of see a doctor have a mean of almost 6 days. The other two variables both, poor physical and poor total health, have a similar pattern. 
+
+
+```{r healt_cost_graph, echo=FALSE}
+
+ggplot(health_cost, aes(x = medical_cost, y = mental_health, col = medical_cost)) +
+  stat_summary(fun.data="mean_sdl",  fun.args = list(mult=1),
+               geom="pointrange") +
+  labs(title = "Poor mental health and Cost", 
+       subtitle = "Could not see a Dr. because of cost",
+       y = "Days of poor mental health", 
+       x = NULL,
+       col = NULL) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5, face = "italic"))
+```
+
+
+* * *
+
+**Research quesion 3:**
+
+
+People who have been told to have a Depressive Disorder show a greater average of alcoholic Drinks per day in comparison with those who have not been told to have a Depressive Disorder? Also I wonder if this pattern is modulated by sex?
+
+Finally, In order to answer the third question, I revised the structure of the variables related with depressive disorder and the average of alcoholic drinks per day.  
+
+```{r dep_alcohol}
+# Ever Told You Had A Depressive Disorder
+summary(brfss2013$addepev2) 
+
+# Avg Alcoholic Drinks Per Day In Past 30
+summary(brfss2013$avedrnk2) 
+```
+
+First, I decided to create a new dataset, selecting and cleaning of NA the three variables of interest: sex, average of alcoholic drinks and depressive disorder. 
+
+Then, I decided to explore the mean and sd of alcoholic drinks according to the response about if they had been told they had a depressive disorder. It is important to note that it is an interaction of depressive disorder and sex which shows different patterns in the mean of alcoholic Drinks per day. 
+
+You can see that depressive people have a litlle higher mean of alcohol drinks than no depressive people. Also that male have higher mean of alcohol drinks than females, and depressive male have the highest mean of alcohol drinks per day.
+```{r sex_alc_drink}
+
+sex_alc_drink <- brfss2013  %>%
+  select(sex = sex, dep_disor = addepev2, drinks_day = avedrnk2) %>%
+  filter(!is.na(sex), 
+         !is.na(dep_disor), 
+         !is.na(drinks_day)) 
+  
+sex_alc_drink %>%
+ group_by(sex_dep_dis = sex:dep_disor) %>%
+  summarise(avg_drinks_day = mean(drinks_day),
+            sd_drinks_day = sd(drinks_day))
+
+```
+
+The same pattern reported is clearer depicted in the next figure which shows a little higher mean of drinks per day in male with depressive antecedents than males with no antecedents, and that this means are greater for males than for females.
+
+
+```{r sex_by_alc, echo=FALSE}
+ggplot(sex_alc_drink, aes(x = sex, y = drinks_day, col = dep_disor)) +
+  stat_summary(fun.y = mean, geom = "point") +
+  stat_summary(fun.y = mean, geom = "line", aes(group = dep_disor)) +
+  stat_summary(fun.data = mean_cl_normal, geom = "errorbar", width = 0.2) +
+  labs(title = "Drinks per day", 
+       subtitle = "Interaction of sex and depression") +
+  labs(x = "Sexo", y = "Drinks per Day", colour = "Depressive Disorder") + 
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5, face = "italic"))
+```
+
