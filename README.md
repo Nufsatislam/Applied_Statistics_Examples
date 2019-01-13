@@ -10,7 +10,7 @@ The specialization has four courses, of which I have completed three. I share in
 
 -   Final project with R code [here.](https://github.com/saidejp/Applied_Statistics_Examples/blob/master/Introduction%20to%20Probability%20and%20Data/EDA_project.md)
 
--   Data and `.Rmd` files [here.](https://github.com/saidejp/Applied_Statistics_Examples/tree/master/Introduction%20to%20Probability%20and%20Data).
+-   Data and `.Rmd` files [here.](https://github.com/saidejp/Applied_Statistics_Examples/tree/master/Introduction%20to%20Probability%20and%20Data)
 
 -   Course certificate [here.](https://www.coursera.org/account/accomplishments/certificate/M354ADPZPQEY)
 
