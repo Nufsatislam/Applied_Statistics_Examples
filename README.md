@@ -14,7 +14,7 @@ The specialization has four courses, of which I have completed three. I share in
 
 -   Course certificate [here.](https://www.coursera.org/account/accomplishments/certificate/M354ADPZPQEY)
 
-1.  [Inferential Statistics](https://www.coursera.org/learn/inferential-statistics-intro?specialization=statistics)
+2.  [Inferential Statistics](https://www.coursera.org/learn/inferential-statistics-intro?specialization=statistics)
 
 -   Final project with R code [here.](https://github.com/saidejp/Applied_Statistics_Examples/blob/master/Inferential%20Statistics%20Course/project_github.md)
 
@@ -22,7 +22,7 @@ The specialization has four courses, of which I have completed three. I share in
 
 -   Course certificate [here.](https://www.coursera.org/account/accomplishments/certificate/RU7FGSTXB5M9)
 
-1.  [Linear Regression and Modeling](https://www.coursera.org/learn/linear-regression-model?specialization=statistics)
+3.  [Linear Regression and Modeling](https://www.coursera.org/learn/linear-regression-model?specialization=statistics)
 
 -   Final project with R code [here.](https://github.com/saidejp/Applied_Statistics_Examples/blob/master/Linear%20Regression%20and%20Modeling/reg_model_project_git.md)
 
