@@ -2,7 +2,7 @@
 Applied Statistics Examples
 ================
 
-Final projects of the [Specialization in Statistics with R](https://www.coursera.org/specializations/statistics), which is taught online by Duke University in Coursera.
+Final projects of the [Specialization in Statistics with R](https://www.coursera.org/specializations/statistics), which is taught online by Duke University on Coursera.
 
 The specialization has four courses, of which I have completed three. I share in the corresponding folders the data, R code, the generated `.md` report, as well as my course certificate.
 
